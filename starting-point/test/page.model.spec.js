@@ -138,26 +138,68 @@ describe('testing page model', function(){
 	      	.catch(done);
 	      	
 	      });
-	      it('gets other pages with any common tags', function(){
+	      it('gets other pages with any common tags', function(done){
 	      	Page.findOne({
 	      		where: {
-	      			id: 2
+	      			id: 1
 	      		}
 	      	})
 	      	.then(function(page){
 	      		return page.findSimilar();
 	      	})
 	      	.then(function(pages){
-	      		console.log(pages);
-	      		// expect(pages.id).should.include.
+	      		// expect(pages.id).should.include.something.that.deep.equals({id: 2});
+	      		// expect(pages.id).should.include.something.that.deep.equals(4);
+	      		expect(pages).to.contain.a.thing.with.property("id", 2);
+	      		expect(pages).to.contain.a.thing.with.property("id", 4);
 	      	})
+	      	.then(function(){
+	      		done();
+	      	})
+	      	.catch(done);
 	      });
-	      it('does not get other pages without any common tags');
+	      it('does not get other pages without any common tags', function(done){
+      		Page.findOne({
+      		where: {
+      			id: 2
+      		}
+	      	})
+	      	.then(function(page){
+	      		return page.findSimilar();
+	      	})
+	      	.then(function(pages){
+	      		console.log(pages[0].toJSON());
+	      		console.log("1");
+	      		expect(pages).should.not.include({id: 2});
+	      		console.log("2");
+	      		expect(pages).should.not.include({id: 3});
+	      		console.log("3");
+	      	})
+	      	.then(function(){
+	      		done();
+	      	})
+	      	.catch(done);
+	      });
 	    });
   	});
 
   	describe('Validations', function () {
-	    it('errors without title');
+  		var page;
+  		beforeEach(function(){
+  			 page = Page.build();
+  		});
+
+	    it('errors without title', function(){
+	    	 page.urlTitle = "java_script";
+	    	 page.content = "it has prototypal inheritance";
+	    	 page.validate()
+	    	 		.then(function(page){
+
+	    	 		}).catch(function(err){
+	    	 			expect(err.errors).to.contain.a.thing.with.property("title");
+	    	 		});
+	    	 // expect(page.title)
+	    });
 	    it('errors without content');
 	    it('errors given an invalid status');
   	});
