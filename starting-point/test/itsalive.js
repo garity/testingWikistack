@@ -1,3 +1,4 @@
+"use strict";
 const mocha = require('mocha');
 const chai = require('chai');
 const expect = chai.expect;
@@ -43,4 +44,5 @@ describe('testing spies', function(){
 		// expect(logVal).to.have.been.called(testArr.length);
 	})
 })
+// describe()
 
